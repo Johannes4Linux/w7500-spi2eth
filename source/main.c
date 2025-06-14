@@ -43,13 +43,19 @@ uint8_t PHY_ADDR = 0;
 #define GET_IRQ 0x8
 #define RESET_PHY 0x9
 #define CHECK_ALIVE 0xA
+#define IRQ_TEST 0xB
 
 #define RAW_SOCKET_NR 0
 #define S0_TXMEM_BASE 0x46020000
 #define S0_RXMEM_BASE 0x46030000
 
+#ifdef SURF5
 #define IRQ_PIN GPIO_Pin_9
 #define RESET_PIN GPIO_Pin_5
+#else
+#define IRQ_PIN GPIO_Pin_15
+#define RESET_PIN GPIO_Pin_5
+#endif
 
 #define SET_IRQ   GPIO_WriteBit(GPIOA, IRQ_PIN, 0)
 #define RESET_IRQ GPIO_WriteBit(GPIOA, IRQ_PIN, 1)
@@ -241,6 +247,9 @@ int main()
 					/* Send back Pending Interrupts */
 					while (!SSP_GetFlagStatus(SSP1, SSP_FLAG_TNF));
 					SSP1->DR = (uint8_t) 0x73;
+					break;
+				case IRQ_TEST:
+					SET_IRQ;
 					break;
 				default:
 					break;
