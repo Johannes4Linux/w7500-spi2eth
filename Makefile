@@ -1,6 +1,5 @@
 # Variables
 SRC = source/main.c \
-      source/spi_smi.c \
       source/timer.c \
       source/print.c \
       wiznet/source/system_W7500x.c \
@@ -27,6 +26,13 @@ CFLAGS = -mcpu=cortex-m0 -mthumb $(INC)
 ASFLAGS = -mcpu=cortex-m0 -mthumb
 LDFLAGS = -mcpu=cortex-m0 -mthumb -nostdlib -T gcc_W7500.ld
 
+ifeq ($(BOARD),SURF5)
+	SRC += source/smi.c 
+	CFLFAGS += -DSURF5
+else
+	SRC += source/spi_smi.c 
+endif
+	
 # Output files
 NAME = w7500_spi2eth
 TARGET =$(NAME).elf
